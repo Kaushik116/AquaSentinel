@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AquaSentinel Lake Flood Prediction System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container left-logo">
+            <img src="C:\Users\kaush\Downloads\pjt project\aquasentinel\images\image.png" alt="AquaSentinel Logo" class="logo">
+        </div>
+        <div class="header-content">
+            <div class="main-title">AquaSentinel</div>
+            <h1>Lake Flood Prediction System</h1>
+            <p>Real-time monitoring and predictive analysis for flood prevention</p>
+        </div>
+        <div class="logo-container right-logo">
+            <img src="C:\Users\kaush\Downloads\pjt project\aquasentinel\images\image.png" alt="AquaSentinel Logo" class="logo">
+        </div>
+    </header>
+
+    <div class="container">
+	<section id="lake-selection">
+            <h2>Lake Visualization-Topographic View</h2>
+            <div class="lake-scroller">
+                <div class="lake-option" data-lake="poondi" onclick="selectLake('poondi')">Poondi</div>
+                <div class="lake-option" data-lake="cholavaram" onclick="selectLake('cholavaram')">Cholavaram</div>
+                <div class="lake-option" data-lake="puzhal" onclick="selectLake('puzhal')">Puzhal</div>
+                <div class="lake-option" data-lake="kannankottai" onclick="selectLake('kannankottai')">Kannankottai Thervoy Kandigai</div>
+                <div class="lake-option" data-lake="chembarambakkam" onclick="selectLake('chembarambakkam')">Chembarambakkam</div>
+                <div class="lake-option" data-lake="veeranam" onclick="selectLake('veeranam')">Veeranam</div>
+            </div>
+            <div class="topographic-view">
+                <img id="lake-image" src="images/chembarambakkam.jpg" alt="Selected Lake Topographic View">
+            </div>
+        </section>
+        <!-- Current Conditions Section -->
+        <!-- Current Conditions Section with Lake Selection -->
+           <section id="current-conditions">
+            <div class="section-header">
+                <h2>Current Conditions</h2>
+                <div class="lake-selector">
+                    <select id="lake-select">
+                        <option value="poondi">Poondi</option>
+                        <option value="cholavaram">Cholavaram</option>
+                        <option value="puzhal">Puzhal</option>
+                        <option value="kannankottai">Kannankottai Thervoy Kandigai</option>
+                        <option value="chembarambakkam">Chembarambakkam</option>
+                        <option value="veeranam">Veeranam</option>
+                    </select>
+                </div>
+            </div>
+            <div class="topographic-view">
+                <img id="lake-image" src="images/chembarambakkam.jpg" alt="Selected Lake Topographic View">
+            </div>
+            <div class="dashboard">
+                <!-- Live Weather Card -->
+                <div class="card">
+                    <h3>Live Weather</h3>
+                    <div class="weather-display">
+                        <div class="weather-icon">☁️</div>
+                        <div>
+                            <h4 id="weather-condition">Cloudy</h4>
+                            <p id="weather-temp">28°C</p>
+                            <p id="weather-wind">Wind: 12 km/h NE</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Monthly Rainfall Prediction -->
+                    <div class="month-prediction">
+                        <h4>Rainfall Prediction</h4>
+                        <select id="month-select">
+                            <option value="">Select Month</option>
+                            <option value="jan">January</option>
+                            <option value="feb">February</option>
+                            <option value="mar">March</option>
+                            <option value="apr">April</option>
+                            <option value="may">May</option>
+                            <option value="jun">June</option>
+                            <option value="jul">July</option>
+                            <option value="aug">August</option>
+                            <option value="sep">September</option>
+                            <option value="oct">October</option>
+                            <option value="nov">November</option>
+                            <option value="dec">December</option>
+                        </select>
+                        <div id="monthly-prediction-result" style="margin-top:10px;"></div>
+                    </div>
+                </div>
+
+                <!-- Rainfall Prediction -->
+                <div class="card">
+                    <h3>Real-Time Rainfall Tracker</h3>
+                    <div class="chart-container">
+                        <canvas id="rainChart"></canvas>
+                    </div>
+                    <p>Next 24h: <strong id="rain-prediction">15mm</strong> expected</p>
+                </div>
+
+                <!-- Lake Status -->
+                <div class="card">
+                    <h3>Lake Conditions</h3>
+                    <p>Inflow: <span id="current-inflow">120 cusecs</span></p>
+                    <p>Outflow: <span id="current-outflow">95 cusecs</span></p>
+                    
+                    <table class="lake-storage-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Full Tank Level (ft.)</td>
+                                <td>85.40</td>
+                            </tr>
+                            <tr>
+                                <td>Full Capacity (mcft)</td>
+                                <td>3645.00</td>
+                            </tr>
+                            <tr>
+                                <td>Current Level (ft)</td>
+                                <td class="editable-value">83.00</td>
+                            </tr>
+                            <tr>
+                                <td>Current Storage (mcft)</td>
+                                <td class="editable-value">3012.00</td>
+                            </tr>
+                            <tr>
+                                <td>Current Storage Level (%)</td>
+                                <td class="editable-value">82.63</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Flood Prediction Section -->
+        <section id="flood-prediction">
+            <h2>Flood Risk Assessment</h2>
+            <div class="dashboard">
+                <div class="card" style="grid-column: span 2">
+                    <div class="two-column-layout">
+                        <div>
+                            <form id="flood-form">
+                                <div class="form-group">
+                                    <label for="rainfall">Rainfall (mm):</label>
+                                    <input type="number" id="rainfall" value="50" min="0">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="duration">Duration (hours):</label>
+                                    <input type="number" id="duration" value="6" min="1">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="inflow">Current Inflow (cusecs):</label>
+                                    <input type="number" id="inflow" value="150">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="outflow">Current Outflow (cusecs):</label>
+                                    <input type="number" id="outflow" value="100">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="level">Lake Level (ft):</label>
+                                    <input type="number" id="level" value="40.68" step="0.1">
+                                </div>
+                                
+                                <button type="button" id="predict-flood">Assess Flood Risk</button>
+                            </form>
+                            
+                            <div id="prediction-result" style="margin-top: 20px;"></div>
+                            <div class="chart-container">
+                                <canvas id="floodRiskChart"></canvas>
+                            </div>
+                        </div>
+                        <div>
+                            <h3>Rainfall Intensity Classification</h3>
+                            <table class="rainfall-table">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Description</th>
+                                        <th>Rate (mm/hour)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Drizzle</td>
+                                        <td>Very small droplets</td>
+                                        <td>Variable</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Slight drizzle</td>
+                                        <td>Detectable as droplets only on face, windscreens</td>
+                                        <td>Up to 0.2</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Moderate drizzle</td>
+                                        <td>Windows and surfaces stream with water</td>
+                                        <td>0.2-0.5</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Heavy drizzle</td>
+                                        <td>Impairs visibility, measurable in gauge</td>
+                                        <td>Up to 1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Slight rain</td>
+                                        <td>Small to large drops</td>
+                                        <td>&lt; 0.5</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Moderate rain</td>
+                                        <td>Steady rainfall</td>
+                                        <td>0.5 - 4.0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Heavy rain</td>
+                                        <td>Significant rainfall</td>
+                                        <td>4.0 - 8.0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Very heavy rain</td>
+                                        <td>Intense rainfall</td>
+                                        <td>&gt; 8.0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Slight shower</td>
+                                        <td>Brief light rain</td>
+                                        <td>&lt; 2.0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Moderate shower</td>
+                                        <td>Brief moderate rain</td>
+                                        <td>2.0 - 10.0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Heavy shower</td>
+                                        <td>Brief heavy rain</td>
+                                        <td>10.0 - 50.0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Violent shower</td>
+                                        <td>Extremely heavy brief rain</td>
+                                        <td>&gt; 50.0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Emergency Alert Section -->
+                            <div style="margin-top: 20px; text-align: center;">
+                                <button id="emergency-alert" style="background-color: var(--danger); width: 100%; padding: 15px; font-size: 1.1em;">
+                                    🚨 EMERGENCY ALERT - Click for Emergency Contacts 🚨
+                                </button>
+                                <div id="emergency-contacts" style="display: none; margin-top: 15px; background: #ffebee; padding: 15px; border-radius: 5px;">
+                                    <h3 style="color: var(--danger); margin-top: 0;">Emergency Contacts</h3>
+                                    <div style="display: flex; justify-content: center; gap: 20px; align-items: center;">
+                                        <span style="font-size: 2em;">📞</span>
+                                        <div>
+                                            <p style="margin: 5px 0;"><strong>Flood Control Center:</strong> <span id="contact1">+1 (555) 234-5678</span></p>
+                                            <p style="margin: 5px 0;"><strong>Emergency Services:</strong> <span id="contact2">+1 (555) 345-6789</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Digital Twin Simulation Section -->
+        <section id="simulation">
+            <h2>Digital Twin Flood Simulation</h2>
+            <div class="card simulation-card">
+                <div class="two-column-layout">
+                    <div>
+                        <h3>Simulation Parameters</h3>
+                        <form id="simulation-form">
+                            <div class="form-group">
+                                <label for="sim-rainfall">Rainfall (mm):</label>
+                                <input type="number" id="sim-rainfall" value="50" min="0">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="sim-duration">Duration (hours):</label>
+                                <input type="number" id="sim-duration" value="6" min="1">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="sim-level">Current Lake Level (ft):</label>
+                                <input type="number" id="sim-level" value="83.00" step="0.1">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="sim-gates">Dam Opening (%):</label>
+                                <input type="number" id="sim-gates" value="30" min="0" max="100">
+                            </div>
+                            
+                            <button type="button" id="run-simulation">Run Simulation</button>
+                        </form>
+                    </div>
+                    <div>
+                        <h3>Simulation Results</h3>
+                        <div id="simulation-result" style="margin-top: 10px;">
+                            <p>Run a simulation to see predicted outcomes</p>
+                        </div>
+                        <div class="chart-container large-chart">
+                            <canvas id="simulationChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Historical Data Section -->
+        <section id="historical-data">
+            <h2>Historical Flood Events Database</h2>
+            <div class="card">
+                <div class="two-column-layout">
+                    <div>
+                        <h3>Search Historical Events</h3>
+                        <form id="historical-search">
+                            <div class="form-group">
+                                <label for="search-rainfall">Minimum Rainfall (mm):</label>
+                                <input type="number" id="search-rainfall" min="0">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="search-duration">Duration (hours):</label>
+                                <input type="number" id="search-duration" min="1">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="search-level">Maximum Lake Level (ft):</label>
+                                <input type="number" id="search-level" step="0.1">
+                            </div>
+                            
+                            <button type="button" id="search-events">Search Database</button>
+                        </form>
+                    </div>
+                    <div>
+                        <h3>Similar Historical Events</h3>
+                        <div id="historical-events"></div>
+                    </div>
+                </div>
+                <div class="chart-container large-chart">
+                    <canvas id="historicalChart"></canvas>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Lake Flood Prediction System © 2025 | Real-time Monitoring Dashboard</p>
+        <p>Developed by Kaushik Palaniappan(VIT)</p>
+    </footer>
+
+    <!-- Chart.js for visualizations -->
+    <!-- Load Chart.js first -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Then load your script -->
+    <script src="script.js"></script>
+</body>
+</html>
